@@ -1,0 +1,63 @@
+// header file for arc42-template,
+// including all help texts
+//
+// ====================================
+
+= {projectName} architecture documentation
+// toc-title definition MUST follow document title without blank line!
+:toc-title: Table of Contents
+
+// numbering from here on
+:numbered:
+
+Last updated: {dateTime}
+
+<<<<
+// 1. Introduction and Goals
+include::_01_introduction_and_goals.adoc[]
+
+<<<<
+// 2. Architecture Constraints
+include::_02_architecture_constraints.adoc[]
+
+<<<<
+// 3. System Scope and Context
+include::_03_system_scope_and_context.adoc[]
+
+<<<<
+// 4. Solution Strategy
+include::_04_solution_strategy.adoc[]
+
+<<<<
+// 5. Building Block View
+include::_05_building_block_view.adoc[]
+
+<<<<
+// 6. Runtime View
+include::_06_runtime_view.adoc[]
+
+<<<<
+// 7. Deployment View
+include::_07_deployment_view.adoc[]
+
+<<<<
+// 8. Concepts
+include::_08_concepts.adoc[]
+
+<<<<
+// 9. Architecture Decisions
+include::_09_architecture_decisions.adoc[]
+
+<<<<
+// 10. Quality Requirements
+include::_10_quality_requirements.adoc[]
+
+<<<<
+// 11. Technical Risks
+include::_11_technical_risks.adoc[]
+
+<<<<
+// 12. Glossary
+include::_12_glossary.adoc[]
+
+

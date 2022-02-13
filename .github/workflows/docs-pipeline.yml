@@ -1,0 +1,59 @@
+name: Docs pipeline
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "docs_pages"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  docs_pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      # We need to install GraphViz to convert PlantUml files to images
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+      # Run Asciidoctor
+      - name: Asciidoctor
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: asciidoctor
+      # Upload the HTML docs generated with Asciidoctor
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./build/docs
+      # Deploy the uploaded docs using GitHub Pages action
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+  docs_confluence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      # We need to install GraphViz to convert PlantUml files to images
+      - name: Setup Graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+      # Run publishToConfluence task which runs Asciidoctor and publishes the resulting file to confluence
+      - name: Publish To Confluence
+        uses: gradle/gradle-build-action@v2
+        # Use confluence token provided as project secret
+        env:
+          CONFLUENCE_TOKEN: ${{secrets.CONFLUENCE_TOKEN}}
+        with:
+          arguments: publishToConfluence
