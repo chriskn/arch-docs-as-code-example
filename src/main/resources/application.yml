@@ -1,0 +1,16 @@
+# This configuration is just an example and incomplete.
+# Complete config can be found here: https://github.com/codecentric/spring-kafka-streams-example/blob/0515cad71fffb6f34465260c66fafd9f59f7cc79/kafka-samples-consumer/src/main/resources/application.yml
+spring:
+  application:
+    name: inventory-service
+  cloud:
+    stream:
+      bindings:
+        processStock-in-0:
+          group: ${spring.application.name}-consumer
+          destination: warehouse.stock
+        processGoods-in-0:
+          group: ${spring.application.name}-consumer
+          destination: warehouse.goods
+    function:
+      definition: processStock;processGoods

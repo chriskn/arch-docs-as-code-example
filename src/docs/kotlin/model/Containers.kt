@@ -15,6 +15,7 @@ import docsascode.model.Systems.graphQlFederation
 import docsascode.model.Systems.inventoryService
 import docsascode.model.Systems.orderService
 import docsascode.model.Systems.warehouse
+import docsascode.model.utils.parseTopicDestinations
 
 object Containers {
 
@@ -26,16 +27,15 @@ object Containers {
         icon = "graphql"
     )
 
-    private val stockTopic = warehouse.kafkaTopic(
-        name = "warehouse.stock",
-        description = "Contains data regarding the amount of goods in stock"
-    )
-    private val goodsTopic = warehouse.kafkaTopic(
-        name = "warehouse.goods",
-        description = "Contains metadata regarding goods"
-    )
+    private val topicConsumedByInventoryService =
+        parseTopicDestinations().map { topicName ->
+            warehouse.kafkaTopic(topicName, resolveDesciptionByTopicName(topicName))
+        }
 
-    private fun SoftwareSystem.kafkaTopic(name: String, description: String): Container = this.container(
+    private fun SoftwareSystem.kafkaTopic(
+        name: String,
+        description: String
+    ): Container = this.container(
         name = name,
         description = description,
         c4Type = C4Type.QUEUE,
@@ -43,6 +43,14 @@ object Containers {
         icon = "kafka",
         link = "https://examplecompany.akhq.org/$name"
     )
+
+    private fun resolveDesciptionByTopicName(topicName: String): String = with(topicName) {
+        when {
+            contains("goods") -> "Contains metadata regarding goods"
+            contains("stock") -> "Contains data regarding the amount of goods in stock"
+            else -> ""
+        }
+    }
 
     val database = inventoryService.container(
         name = "Inventory Database",
@@ -58,25 +66,22 @@ object Containers {
             "Orders new goods if they run out of stock",
         technology = "SpringBoot, Spring Data JDBC, Kafka Streams",
         icon = "springboot",
-        uses = listOf(
-            Dependency(destination = database, description = "Reads and writes inventory data to/from"),
-            Dependency(destination = subGraphInventory, description = "contributes to federated graph"),
+        uses = topicConsumedByInventoryService.map { topic ->
             Dependency(
-                destination = goodsTopic,
-                description = "reads",
+                destination = topic,
+                description = "Reads",
                 technology = "Kafka",
                 interactionStyle = Asynchronous
-            ),
-            Dependency(
-                destination = stockTopic,
-                description = "reads",
-                technology = "Kafka",
-                interactionStyle = Asynchronous
-            ),
-            Dependency(
-                destination = orderService,
-                description = "Triggers order if goods run out of stock",
-                technology = "REST"
+            )
+        }.plus(
+            listOf(
+                Dependency(destination = database, description = "Reads and writes inventory data to/from"),
+                Dependency(destination = subGraphInventory, description = "contributes to federated graph"),
+                Dependency(
+                    destination = orderService,
+                    description = "Triggers order if goods run out of stock",
+                    technology = "REST"
+                )
             )
         )
     )

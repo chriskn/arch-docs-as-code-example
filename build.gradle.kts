@@ -1,11 +1,16 @@
 import ch.nomisp.confluence.publisher.PublishToConfluenceTask
 import org.asciidoctor.gradle.editorconfig.AsciidoctorEditorConfigGenerator
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
     kotlin("jvm") version "1.7.10"
+    id("org.springframework.boot") version "2.7.5"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
+
+
     id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("org.asciidoctor.editorconfig") version "3.3.2"
     id("ch.nomisp.confluence.publisher") version "0.2.0"
@@ -18,6 +23,10 @@ repositories {
     mavenCentral()
 }
 
+tasks.getByName<BootJar>("bootJar") {
+    enabled = false
+}
+
 sourceSets {
     create("docs") {
         kotlin {
@@ -28,8 +37,19 @@ sourceSets {
     val docs by getting {
         dependencies {
             "docsImplementation"("io.github.chriskn:structurizr-c4puml-extension:0.7.2")
+            "docsImplementation"("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.1")
+            "docsImplementation"("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+            "docsImplementation"("com.structurizr:structurizr-analysis:1.3.5")
+            "docsImplementation"("com.structurizr:structurizr-spring:1.3.5")
+            // make spring annotations available to use it with AnnotationTypeMatcher
+            "docsImplementation"("org.springframework.boot:spring-boot-starter")
         }
     }
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("com.structurizr:structurizr-annotations:1.3.5")
 }
 
 tasks {
@@ -67,7 +87,7 @@ tasks.withType(AsciidoctorEditorConfigGenerator::class) {
     group = "documentation"
 }
 
-tasks.named("processDocsResources"){
+tasks.named("processDocsResources") {
     dependsOn("asciidoctorEditorConfig")
 }
 

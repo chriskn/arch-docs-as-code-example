@@ -9,6 +9,7 @@ import com.github.chriskn.structurizrextension.plantuml.DependencyConfiguration
 import com.github.chriskn.structurizrextension.plantuml.Layout
 import com.github.chriskn.structurizrextension.plantuml.Mode
 import com.github.chriskn.structurizrextension.view.deploymentView
+import docsascode.model.utils.resolveHelmValues
 
 object Deployment {
 
@@ -34,16 +35,14 @@ object Deployment {
         icon = "awsekscloud"
     )
 
+
     private val inventoryPod = eks.deploymentNode(
         name = "Inventory POD",
         properties = C4Properties(
-            values = listOf(
-                listOf("port", "8080"),
-                listOf("minReplicas", "2"),
-                listOf("maxReplicas", "10")
-            )
+            values = resolveHelmValues()
         )
     )
+
     private val inventoryDocker = inventoryPod.deploymentNode(
         name = "Docker Container",
         icon = "docker",
@@ -58,18 +57,18 @@ object Deployment {
         uses = listOf(
             Dependency(
                 destination = inventoryPod,
-                description = "forwards requests to"
+                description = "Forwards requests to"
             )
         )
     )
 
-    private val appollo = InventoryWorkspace.model.deploymentNode(
+    private val apollo = InventoryWorkspace.model.deploymentNode(
         name = "Apollo Studio",
         hostsSystems = listOf(Systems.graphQlFederation),
         uses = listOf(
             Dependency(
                 destination = ingress,
-                description = "forwards ${Containers.subGraphInventory.name} queries to"
+                description = "Forwards ${Containers.subGraphInventory.name} queries to"
             )
         )
     )
