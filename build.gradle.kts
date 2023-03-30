@@ -36,7 +36,7 @@ sourceSets {
     }
     val docs by getting {
         dependencies {
-            "docsImplementation"("io.github.chriskn:structurizr-c4puml-extension:0.7.2")
+            "docsImplementation"("io.github.chriskn:structurizr-c4puml-extension:0.8.0")
             "docsImplementation"("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.1")
             "docsImplementation"("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
             "docsImplementation"("com.structurizr:structurizr-analysis:1.3.5")
@@ -60,6 +60,8 @@ tasks {
         kotlinOptions.jvmTarget = "17"
     }
 }
+
+// Asciidoctor
 
 val asciiAttributes = mapOf(
     "imagesdir" to ".",
@@ -104,6 +106,8 @@ asciidoctorj {
     }
 }
 
+// Confluence publisher
+
 confluencePublisher {
     asciiDocRootFolder.set(tasks.asciidoctor.get().sourceDir)
     setAttributes(tasks.asciidoctor.get().attributes)
@@ -115,6 +119,8 @@ confluencePublisher {
     password.set(System.getenv("CONFLUENCE_TOKEN"))
     notifyWatchers.set(false)
 }
+
+// Diagrams
 
 tasks.withType(PublishToConfluenceTask::class) {
     dependsOn("writeDiagrams")

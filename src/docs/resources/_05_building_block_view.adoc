@@ -3,14 +3,12 @@
 
 == Building Block View
 
-[[container-view]]
-plantuml::{plantUmlDir}/inventory_container.puml[format=svg,opts="inline",align="center"]
+
 
 === Whitebox Overall System
 
-
-
-_**<Overview Diagram>**_
+[[container-view]]
+plantuml::{plantUmlDir}/inventory_container.puml[format=svg,opts="inline",align="center"]
 
 Motivation::
 
@@ -64,7 +62,8 @@ _<black box template>_
 
 === Level 2
 
-
+[[component-view]]
+plantuml::{plantUmlDir}/inventory_components.puml[format=svg,opts="inline",align="center"]
 
 ==== White Box _<building block 1>_
 

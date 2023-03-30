@@ -4,7 +4,7 @@ resources:
   limits_cpu: 3000m
   limits_memory: 1500Mi
 autoscaling:
-  min_replicas: 2
+  min_replicas: 5
   max_replicas: 10
 port: 8080
 imagePullPolicy: IfNotPresent

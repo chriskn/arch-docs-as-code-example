@@ -20,5 +20,4 @@ fun main() {
     workspace.writeDiagrams(outputFolder)
 
     val table = createAsciiAlertTable()
-    println(table)
 }

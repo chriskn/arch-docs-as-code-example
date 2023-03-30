@@ -8,7 +8,7 @@ spring:
       bindings:
         processStock-in-0:
           group: ${spring.application.name}-consumer
-          destination: warehouse.stock
+          destination: warehouse.stock_v1
         processGoods-in-0:
           group: ${spring.application.name}-consumer
           destination: warehouse.goods

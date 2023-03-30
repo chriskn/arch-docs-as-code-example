@@ -29,7 +29,7 @@ object Containers {
 
     private val topicConsumedByInventoryService =
         parseTopicDestinations().map { topicName ->
-            warehouse.kafkaTopic(topicName, resolveDesciptionByTopicName(topicName))
+            warehouse.kafkaTopic(topicName, resolveDescriptionByTopicName(topicName))
         }
 
     private fun SoftwareSystem.kafkaTopic(
@@ -44,7 +44,7 @@ object Containers {
         link = "https://examplecompany.akhq.org/$name"
     )
 
-    private fun resolveDesciptionByTopicName(topicName: String): String = with(topicName) {
+    private fun resolveDescriptionByTopicName(topicName: String): String = with(topicName) {
         when {
             contains("goods") -> "Contains metadata regarding goods"
             contains("stock") -> "Contains data regarding the amount of goods in stock"
@@ -66,6 +66,7 @@ object Containers {
             "Orders new goods if they run out of stock",
         technology = "SpringBoot, Spring Data JDBC, Kafka Streams",
         icon = "springboot",
+        link = "#component-view",
         uses = topicConsumedByInventoryService.map { topic ->
             Dependency(
                 destination = topic,

@@ -29,9 +29,9 @@ object Components {
 
     init {
         val strategy =
-        // createSpringComponentFinderStrategy()
-            // createTypeMatcherComponentFinderStrategy()
             createStructurizrAnnotationsComponentFinderStrategy()
+        // createSpringComponentFinderStrategy()
+        // createTypeMatcherComponentFinderStrategy()
         strategy.duplicateComponentStrategy = IgnoreDuplicateComponentStrategy()
 
         val componentFinder = ComponentFinder(
