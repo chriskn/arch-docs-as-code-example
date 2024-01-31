@@ -10,7 +10,7 @@ import docsascode.model.utils.createAsciiAlertTable
 import java.io.File
 
 private val outputFolder = File("src/docs/resources/plantuml/")
-private val alertFile = File("src/docs/resources/docs_generated/alerts.adoc")
+private val docsGeneratedFolder = File("src/docs/resources/docs_generated/")
 
 fun main() {
     generateDiagrams()
@@ -28,5 +28,8 @@ private fun generateDiagrams() {
 
 private fun generateDocs() {
     val alertTable = createAsciiAlertTable()
-    alertFile.bufferedWriter().use { out -> out.write(alertTable) }
+    docsGeneratedFolder.mkdirs()
+    File(docsGeneratedFolder, "alerts.adoc")
+        .bufferedWriter()
+        .use { out -> out.write(alertTable) }
 }
