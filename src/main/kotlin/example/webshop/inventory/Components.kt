@@ -30,7 +30,7 @@ class GoodsConsumer(
 
 @Component
 @StructurizrComponent(description = "Consumes stock Kafka topic")
-@UsesContainer(name = "Container://Warehouse.warehousestock", description = "Consumes", technology = "Kafka")
+@UsesContainer(name = "Container://Warehouse.warehousestock_v1", description = "Consumes", technology = "Kafka")
 class StockConsumer(
     @UsesComponent(description = "Writes received stock data")
     private val inventoryWriteService: InventoryWriteService

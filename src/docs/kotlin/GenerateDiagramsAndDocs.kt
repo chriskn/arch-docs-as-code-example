@@ -10,14 +10,23 @@ import docsascode.model.utils.createAsciiAlertTable
 import java.io.File
 
 private val outputFolder = File("src/docs/resources/plantuml/")
+private val alertFile = File("src/docs/resources/docs_generated/alerts.adoc")
 
 fun main() {
+    generateDiagrams()
+    generateDocs()
+}
+
+private fun generateDiagrams() {
     Systems.createContextView()
     Containers.createContainerView()
     Components.createComponentView()
     Deployment.createDeploymentView()
 
     workspace.writeDiagrams(outputFolder)
+}
 
-    val table = createAsciiAlertTable()
+private fun generateDocs() {
+    val alertTable = createAsciiAlertTable()
+    alertFile.bufferedWriter().use { out -> out.write(alertTable) }
 }

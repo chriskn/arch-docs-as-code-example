@@ -10,9 +10,8 @@ plugins {
     id("org.springframework.boot") version "2.7.5"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
 
-
-    id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("org.asciidoctor.editorconfig") version "3.3.2"
+    id("org.asciidoctor.jvm.convert") version "4.0.0"
+    id("org.asciidoctor.editorconfig") version "4.0.0"
     id("ch.nomisp.confluence.publisher") version "0.2.0"
 }
 
@@ -80,7 +79,7 @@ tasks.withType(AsciidoctorTask::class) {
     attributes(asciiAttributes)
     options(mapOf("doctype" to "book"))
     isLogDocuments = true
-    dependsOn("writeDiagrams")
+    dependsOn("generateDiagramsAndDocs")
 }
 
 tasks.withType(AsciidoctorEditorConfigGenerator::class) {
@@ -93,9 +92,11 @@ tasks.named("processDocsResources") {
     dependsOn("asciidoctorEditorConfig")
 }
 
-tasks.register("writeDiagrams", JavaExec::class) {
+// Diagrams
+
+tasks.register("generateDiagramsAndDocs", JavaExec::class) {
     classpath += sourceSets["docs"].runtimeClasspath
-    mainClass.set("docsascode.WriteDiagramsKt")
+    mainClass.set("docsascode.GenerateDiagramsAndDocsKt")
     group = "documentation"
 }
 
@@ -114,16 +115,14 @@ confluencePublisher {
     rootConfluenceUrl.set("YOUR_CONFLUENCE_URL")
     spaceKey.set("YOUR_SPACE_KEY")
     ancestorId.set("ID_OF_PARENT_PAGE")
-    // set username or password or use an api token as password with empty username
+    // set username and password
     username.set("")
     password.set(System.getenv("CONFLUENCE_TOKEN"))
     notifyWatchers.set(false)
 }
 
-// Diagrams
-
 tasks.withType(PublishToConfluenceTask::class) {
-    dependsOn("writeDiagrams")
+    dependsOn("generateDiagramsAndDocs")
 }
 
 
